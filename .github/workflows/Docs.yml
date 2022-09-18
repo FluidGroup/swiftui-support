@@ -26,7 +26,7 @@ jobs:
           $(xcrun --find docc) process-archive \
             transform-for-static-hosting ".build/Build/Products/Debug-iphoneos/SwiftUISupport.doccarchive" \
             --output-path public \
-            --hosting-base-path "SwiftUISupport"
+            --hosting-base-path "swiftui-support"
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref == 'refs/heads/main' }}

@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: maxim-lobanov/setup-xcode@v1.1
         with:
-          xcode-version: "14"
+          xcode-version: "14.0"
       - uses: actions/checkout@v2
       - name: xcodebuild
         run: xcodebuild -scheme SwiftUISupport -sdk iphoneos -destination 'generic/platform=iOS'
@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: maxim-lobanov/setup-xcode@v1.1
         with:
-          xcode-version: "14"
+          xcode-version: "14.0"
       - uses: actions/checkout@v2
         with:
           submodules: true

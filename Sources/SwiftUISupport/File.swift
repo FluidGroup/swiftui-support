@@ -30,3 +30,15 @@ public struct StyleModifier: ViewModifier {
   }
   
 }
+
+extension View {
+  
+  public func modifier<Modifier: ViewModifier>(
+    condition: Bool,
+    initial: Modifier,
+    active: Modifier
+  ) -> some View {
+    modifier(condition ? initial : active)
+  }
+  
+}

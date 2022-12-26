@@ -12,6 +12,13 @@ extension View {
     
   }
   
+  /// [extension]
+  public func frame(square: CGFloat, alignment: Alignment = .center) -> some View {
+    
+    return frame(width: square, height: square, alignment: alignment)
+    
+  }
+  
 }
 
 import Combine

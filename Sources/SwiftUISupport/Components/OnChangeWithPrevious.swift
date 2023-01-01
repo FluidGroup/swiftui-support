@@ -58,7 +58,8 @@ private struct ChangeModifier<Value: Equatable>: ViewModifier {
   }
   
   func body(content: Content) -> some View {
-    content
+    content    
+      .blendMode(.normal) // For iOS <= 14, Modifier should have something another modifiers of appearances.
       .onReceive(Just(value)) { newValue in
         
         if emitsInitial, emitCount == 0 {

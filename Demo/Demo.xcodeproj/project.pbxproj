@@ -11,6 +11,8 @@
 		4B7E252729618C8100E53388 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E252629618C8100E53388 /* Assets.xcassets */; };
 		4B7E252A29618C8100E53388 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E252929618C8100E53388 /* Preview Assets.xcassets */; };
 		4B7E253129618CAB00E53388 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E253029618CAB00E53388 /* AppDelegate.swift */; };
+		4B7E253429618D1D00E53388 /* BookChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E253329618D1D00E53388 /* BookChange.swift */; };
+		4B7E253729618E6200E53388 /* SwiftUISupport in Frameworks */ = {isa = PBXBuildFile; productRef = 4B7E253629618E6200E53388 /* SwiftUISupport */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +22,7 @@
 		4B7E252929618C8100E53388 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4B7E253029618CAB00E53388 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4B7E253229618CDC00E53388 /* swiftui-support */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swiftui-support"; path = ..; sourceTree = "<group>"; };
+		4B7E253329618D1D00E53388 /* BookChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookChange.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B7E253729618E6200E53388 /* SwiftUISupport in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,6 +43,7 @@
 				4B7E253229618CDC00E53388 /* swiftui-support */,
 				4B7E252129618C8000E53388 /* Demo */,
 				4B7E252029618C8000E53388 /* Products */,
+				4B7E253529618E5A00E53388 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -54,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				4B7E252429618C8000E53388 /* ContentView.swift */,
+				4B7E253329618D1D00E53388 /* BookChange.swift */,
 				4B7E252629618C8100E53388 /* Assets.xcassets */,
 				4B7E252829618C8100E53388 /* Preview Content */,
 				4B7E253029618CAB00E53388 /* AppDelegate.swift */,
@@ -67,6 +73,13 @@
 				4B7E252929618C8100E53388 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		4B7E253529618E5A00E53388 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -85,6 +98,9 @@
 			dependencies = (
 			);
 			name = Demo;
+			packageProductDependencies = (
+				4B7E253629618E6200E53388 /* SwiftUISupport */,
+			);
 			productName = Demo;
 			productReference = 4B7E251F29618C8000E53388 /* Demo.app */;
 			productType = "com.apple.product-type.application";
@@ -139,6 +155,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B7E253429618D1D00E53388 /* BookChange.swift in Sources */,
 				4B7E253129618CAB00E53388 /* AppDelegate.swift in Sources */,
 				4B7E252529618C8000E53388 /* ContentView.swift in Sources */,
 			);
@@ -339,6 +356,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4B7E253629618E6200E53388 /* SwiftUISupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftUISupport;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4B7E251729618C8000E53388 /* Project object */;
 }

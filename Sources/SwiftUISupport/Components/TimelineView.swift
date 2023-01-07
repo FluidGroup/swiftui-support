@@ -24,7 +24,7 @@ public final class _backported_PeriodicalTimelineSchedule: _backported_TimelineS
     
     Timer.publish(every: 1, on: .main, in: .common)
       .autoconnect()
-      .delay(for: .seconds(delay), scheduler: RunLoop.main)
+      .delay(for: .seconds(delay), scheduler: DispatchQueue.main)
       .sink { [weak self] t in
         self?.date = Date()
       }

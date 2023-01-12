@@ -18,11 +18,11 @@ public enum RelativeVerticalPosition {
  */
 public struct RelativeView<Content: View>: View {
 
-  let content: Content
-  let vertical: RelativeVerticalPosition
-  let horizontal: RelativeHorizontalPosition
+  public let content: Content
+  public let vertical: RelativeVerticalPosition
+  public let horizontal: RelativeHorizontalPosition
 
-  init(
+  public init(
     vertical: RelativeVerticalPosition,
     horizontal: RelativeHorizontalPosition,
     @ViewBuilder content: () -> Content

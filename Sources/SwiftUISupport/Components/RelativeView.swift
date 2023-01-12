@@ -12,6 +12,10 @@ public enum RelativeVerticalPosition {
   case bottom
 }
 
+/**
+ A container view that places the content in the specified position.
+ A useful case will be placing the content on the corner of the parent view.
+ */
 public struct RelativeView<Content: View>: View {
 
   let content: Content

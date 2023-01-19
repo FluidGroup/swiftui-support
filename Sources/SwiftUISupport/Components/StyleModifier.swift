@@ -33,12 +33,18 @@ public struct StyleModifier: ViewModifier {
 
 extension View {
   
+  /**
+   [Custom-Extenstion]
+   Applies given modifier conditionally.
+   if condition is yes, modifier for the active will be active.
+   */
   public func modifier<Modifier: ViewModifier>(
+    _ type: Modifier.Type? = nil,
     condition: Bool,
-    initial: Modifier,
+    identity: Modifier,
     active: Modifier
   ) -> some View {
-    modifier(condition ? initial : active)
+    modifier(condition ? active : identity)
   }
   
 }

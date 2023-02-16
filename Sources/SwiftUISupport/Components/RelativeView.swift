@@ -38,11 +38,11 @@ public struct RelativeView<Content: View>: View {
       switch horizontal {
       case .left:
         content
-        Spacer()
+        Spacer(minLength: 0)
       case .center:
         content
       case .right:
-        Spacer()
+        Spacer(minLength: 0)
         content
       }
     }
@@ -51,11 +51,11 @@ public struct RelativeView<Content: View>: View {
       switch vertical {
       case .top:
         horizontalContent
-        Spacer()
+        Spacer(minLength: 0)
       case .center:
         horizontalContent
       case .bottom:
-        Spacer()
+        Spacer(minLength: 0)
         horizontalContent
       }
     }

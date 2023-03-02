@@ -16,6 +16,8 @@ public struct UIKitText: UIViewRepresentable {
   public func makeUIView(context: Context) -> UILabel {
     let label = UILabel()
     label.numberOfLines = 0
+    label.setContentHuggingPriority(.required, for: .vertical)
+    label.setContentHuggingPriority(.required, for: .horizontal)
     return label
   }
   

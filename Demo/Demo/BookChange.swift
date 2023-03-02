@@ -19,6 +19,10 @@ struct BookChange: View, PreviewProvider {
         Button("Hit") {
           count += 1
         }
+        
+        UIKitText(attributedString: .init(string: "Hello"))
+          .background(Color.gray)
+        
         Text("Book")
           .onChangeWithPrevious(of: count, emitsInitial: true) { newValue, oldValue in
             print("\(newValue), \(oldValue)")

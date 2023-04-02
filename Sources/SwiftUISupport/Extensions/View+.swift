@@ -1,14 +1,38 @@
 
 import SwiftUI
 
+public enum CornerRoundingMode {
+
+  /// high-performance
+  case clip(color: Color)
+  /// much expensive
+  case mask
+}
+
 extension View {
-  
+
   /// [App-Extension]
-  public func cornerRadius(_ radius: CGFloat, style: RoundedCornerStyle) -> some View {
+  @ViewBuilder
+  public func cornerRadius(_ radius: CGFloat, style: RoundedCornerStyle, mode: CornerRoundingMode = .mask) -> some View {
+
+    switch mode {
+    case .mask:
+      clipShape(
+        RoundedRectangle(cornerRadius: radius, style: style)
+      )
+    case .clip(let color):
+      overlay(
+        ClippingMask(cornerRadius: radius)
+          .foregroundColor(color)
+      )
+    }
+
+  }
+  
+  /// [extension]
+  public func frame(square: CGFloat, alignment: Alignment = .center) -> some View {
     
-    clipShape(
-      RoundedRectangle(cornerRadius: radius, style: style)
-    )
+    return frame(width: square, height: square, alignment: alignment)
     
   }
   

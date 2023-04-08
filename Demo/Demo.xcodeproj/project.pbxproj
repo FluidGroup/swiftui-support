@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4B07F40429E1516D00E223F3 /* GestureVelocity in Frameworks */ = {isa = PBXBuildFile; productRef = 4B07F40329E1516D00E223F3 /* GestureVelocity */; };
+		4B07F40629E1518C00E223F3 /* BookSpringBall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B07F40529E1518C00E223F3 /* BookSpringBall.swift */; };
+		4B07F40829E1518F00E223F3 /* BookHostingEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B07F40729E1518F00E223F3 /* BookHostingEdge.swift */; };
 		4B7E252529618C8000E53388 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7E252429618C8000E53388 /* ContentView.swift */; };
 		4B7E252729618C8100E53388 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E252629618C8100E53388 /* Assets.xcassets */; };
 		4B7E252A29618C8100E53388 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B7E252929618C8100E53388 /* Preview Assets.xcassets */; };
@@ -16,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4B07F40529E1518C00E223F3 /* BookSpringBall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSpringBall.swift; sourceTree = "<group>"; };
+		4B07F40729E1518F00E223F3 /* BookHostingEdge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookHostingEdge.swift; sourceTree = "<group>"; };
 		4B7E251F29618C8000E53388 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B7E252429618C8000E53388 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4B7E252629618C8100E53388 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -31,6 +36,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B7E253729618E6200E53388 /* SwiftUISupport in Frameworks */,
+				4B07F40429E1516D00E223F3 /* GestureVelocity in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +65,9 @@
 			isa = PBXGroup;
 			children = (
 				4B7E252429618C8000E53388 /* ContentView.swift */,
+				4B07F40729E1518F00E223F3 /* BookHostingEdge.swift */,
 				4B7E253329618D1D00E53388 /* BookChange.swift */,
+				4B07F40529E1518C00E223F3 /* BookSpringBall.swift */,
 				4B7E252629618C8100E53388 /* Assets.xcassets */,
 				4B7E252829618C8100E53388 /* Preview Content */,
 				4B7E253029618CAB00E53388 /* AppDelegate.swift */,
@@ -100,6 +108,7 @@
 			name = Demo;
 			packageProductDependencies = (
 				4B7E253629618E6200E53388 /* SwiftUISupport */,
+				4B07F40329E1516D00E223F3 /* GestureVelocity */,
 			);
 			productName = Demo;
 			productReference = 4B7E251F29618C8000E53388 /* Demo.app */;
@@ -129,6 +138,9 @@
 				Base,
 			);
 			mainGroup = 4B7E251629618C8000E53388;
+			packageReferences = (
+				4B07F40229E1516D00E223F3 /* XCRemoteSwiftPackageReference "swiftui-GestureVelocity" */,
+			);
 			productRefGroup = 4B7E252029618C8000E53388 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -155,9 +167,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B07F40629E1518C00E223F3 /* BookSpringBall.swift in Sources */,
 				4B7E253429618D1D00E53388 /* BookChange.swift in Sources */,
 				4B7E253129618CAB00E53388 /* AppDelegate.swift in Sources */,
 				4B7E252529618C8000E53388 /* ContentView.swift in Sources */,
+				4B07F40829E1518F00E223F3 /* BookHostingEdge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -357,7 +371,23 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		4B07F40229E1516D00E223F3 /* XCRemoteSwiftPackageReference "swiftui-GestureVelocity" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/muukii/swiftui-GestureVelocity";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		4B07F40329E1516D00E223F3 /* GestureVelocity */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B07F40229E1516D00E223F3 /* XCRemoteSwiftPackageReference "swiftui-GestureVelocity" */;
+			productName = GestureVelocity;
+		};
 		4B7E253629618E6200E53388 /* SwiftUISupport */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SwiftUISupport;

@@ -23,10 +23,9 @@ public struct StyleModifier: ViewModifier {
   public func body(content: Content) -> some View {
     
     content
+      .animatableOffset(x: offset.width, y: offset.height)
       .opacity(opacity)
       .scaleEffect(scale)
-      .animatableOffset(x: offset.width, y: offset.height)
-      .offset(offset)
       .blur(radius: blurRadius)
   }
 

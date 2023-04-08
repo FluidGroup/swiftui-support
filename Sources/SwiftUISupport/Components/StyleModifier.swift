@@ -25,10 +25,16 @@ public struct StyleModifier: ViewModifier {
     content
       .opacity(opacity)
       .scaleEffect(scale)
+      .animatableOffset(x: offset.width, y: offset.height)
       .offset(offset)
       .blur(radius: blurRadius)
   }
-  
+
+  public static var identity: Self {
+    .init()
+  }
+
+
 }
 
 extension View {

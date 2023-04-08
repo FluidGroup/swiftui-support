@@ -12,11 +12,17 @@ struct ContentView: View {
   var body: some View {
     
     NavigationView {
-      
+
       NavigationLink(destination: {
         BookChange()
       }, label: {
         Text("Change")
+      })
+
+      NavigationLink(destination: {
+        BookSpringBall()
+      }, label: {
+        Text("SpringBall")
       })
     }
   }

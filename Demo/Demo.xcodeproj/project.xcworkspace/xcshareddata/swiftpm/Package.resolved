@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "swiftui-gesturevelocity",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/muukii/swiftui-GestureVelocity",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ef91c659583919a4f23472db6dc03d89a35f41e7"
+      }
+    }
+  ],
+  "version" : 2
+}

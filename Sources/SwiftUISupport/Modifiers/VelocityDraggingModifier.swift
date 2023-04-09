@@ -43,7 +43,7 @@ public struct VelocityDraggingModifier: ViewModifier {
    refs:
    https://stackoverflow.com/questions/72880712/animate-gesturestate-on-reset
    */
-  @State private var position: CGSize = .zero
+  @State private var currentOffset: CGSize = .zero
 
   @GestureVelocity private var velocity: CGVector
 
@@ -67,7 +67,7 @@ public struct VelocityDraggingModifier: ViewModifier {
 
   public func body(content: Content) -> some View {
     content
-      .animatableOffset(x: position.width, y: position.height)
+      .animatableOffset(x: currentOffset.width, y: currentOffset.height)
       .gesture(
         DragGesture(
           minimumDistance: 0,
@@ -77,7 +77,7 @@ public struct VelocityDraggingModifier: ViewModifier {
           // TODO: stop the current animation when dragging restarted.
           withAnimation(.interactiveSpring()) {
             if axis.contains(.horizontal) {
-              position.width = RubberBandingModifier.rubberBand(
+              currentOffset.width = RubberBandingModifier.rubberBand(
                 value: value.translation.width,
                 min: horizontalBoundary.min,
                 max: horizontalBoundary.max,
@@ -85,7 +85,7 @@ public struct VelocityDraggingModifier: ViewModifier {
               )
             }
             if axis.contains(.vertical) {
-              position.height = RubberBandingModifier.rubberBand(
+              currentOffset.height = RubberBandingModifier.rubberBand(
                 value: value.translation.height,
                 min: verticalBoundary.min,
                 max: verticalBoundary.max,
@@ -97,11 +97,13 @@ public struct VelocityDraggingModifier: ViewModifier {
         })
         .onEnded({ value in
 
+          let targetOffset: CGSize = .zero
+
           let velocity = self.velocity
 
           let distance = CGSize(
-            width: -position.width,
-            height: -position.height
+            width: targetOffset.width - currentOffset.width,
+            height: targetOffset.height - currentOffset.height
           )
 
           let mappedVelocity = CGVector(
@@ -136,13 +138,13 @@ public struct VelocityDraggingModifier: ViewModifier {
           withAnimation(
             animationX
           ) {
-            position.width = 0
+            currentOffset.width = 0
           }
 
           withAnimation(
             animationY
           ) {
-            position.height = 0
+            currentOffset.height = 0
           }
 
         })

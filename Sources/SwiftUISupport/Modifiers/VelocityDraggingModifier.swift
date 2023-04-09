@@ -3,6 +3,28 @@ import SwiftUI
 
 public struct VelocityDraggingModifier: ViewModifier {
 
+  public struct Handler {
+    /**
+     A callback closure that is called when the user finishes dragging the content.
+     This closure takes a CGSize as a return value, which is used as the target offset to finalize the animation.
+
+     For example, return CGSize.zero to put it back to the original position.
+     */
+    public var onEndDragging:
+      (_ velocity: CGVector, _ offset: CGSize, _ contentSize: CGSize) -> CGSize
+
+    public init(
+      onEndDragging: @escaping (_ velocity: CGVector, _ offset: CGSize, _ contentSize: CGSize)
+        -> CGSize = { _, _, _ in .zero }
+    ) {
+      self.onEndDragging = onEndDragging
+    }
+  }
+
+  public enum Action {
+    case onEndDragging(velocity: CGVector, offset: CGSize)
+  }
+
   public enum SpringParameter {
     case interpolation(
       mass: Double,
@@ -45,28 +67,35 @@ public struct VelocityDraggingModifier: ViewModifier {
    */
   @State private var currentOffset: CGSize = .zero
 
+  /// pt/s
   @GestureVelocity private var velocity: CGVector
+
+  @State private var contentSize: CGSize = .zero
 
   public let axis: Axis.Set
   public let springParameter: SpringParameter
 
   private let horizontalBoundary: Boundary
   private let verticalBoundary: Boundary
+  private let handler: Handler
 
   public init(
     axis: Axis.Set = [.horizontal, .vertical],
     horizontalBoundary: Boundary = .infinity,
     verticalBoundary: Boundary = .infinity,
-    springParameter: SpringParameter = .hard
+    springParameter: SpringParameter = .hard,
+    handler: Handler = .init()
   ) {
     self.axis = axis
     self.springParameter = springParameter
     self.horizontalBoundary = horizontalBoundary
     self.verticalBoundary = verticalBoundary
+    self.handler = handler
   }
 
   public func body(content: Content) -> some View {
     content
+      .measureSize($contentSize)
       .animatableOffset(x: currentOffset.width, y: currentOffset.height)
       .gesture(
         DragGesture(
@@ -97,7 +126,11 @@ public struct VelocityDraggingModifier: ViewModifier {
         })
         .onEnded({ value in
 
-          let targetOffset: CGSize = .zero
+          let targetOffset: CGSize = handler.onEndDragging(
+            self.velocity,
+            self.currentOffset,
+            self.contentSize
+          )
 
           let velocity = self.velocity
 
@@ -138,13 +171,13 @@ public struct VelocityDraggingModifier: ViewModifier {
           withAnimation(
             animationX
           ) {
-            currentOffset.width = 0
+            currentOffset.width = targetOffset.width
           }
 
           withAnimation(
             animationY
           ) {
-            currentOffset.height = 0
+            currentOffset.height = targetOffset.height
           }
 
         })

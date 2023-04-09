@@ -27,7 +27,11 @@ public struct VelocityDraggingModifier: ViewModifier {
     }
 
     public static var infinity: Self {
-      return .init(min: .infinity, max: .infinity, bandLength: 0)
+      return .init(
+        min: -Double.greatestFiniteMagnitude,
+        max: Double.greatestFiniteMagnitude,
+        bandLength: 0
+      )
     }
   }
 
@@ -159,7 +163,12 @@ struct VelocityDraggingModifier_Previews: PreviewProvider {
 
       RoundedRectangle(cornerRadius: 16, style: .circular)
         .frame(width: 120, height: 50)
-        .modifier(VelocityDraggingModifier(axis: [.vertical], verticalBoundary: .init(min: -10, max: 10, bandLength: 50)))
+        .modifier(
+          VelocityDraggingModifier(
+            axis: [.vertical],
+            verticalBoundary: .init(min: -10, max: 10, bandLength: 50)
+          )
+        )
 
     }
   }

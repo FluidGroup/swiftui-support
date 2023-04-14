@@ -38,11 +38,19 @@ struct BookState: View, PreviewProvider {
 
   private struct Content: View {
 
+    @State var count = 0
+
     var body: some View {
 
-      LocalState(initial: 1) { $value in
-        Button("Tap \(value)") {
-          value += 1
+      VStack {
+        Button("Outer \(count)") {
+          count += 1
+        }
+
+        LocalState(initial: 1) { $value in
+          Button("Tap \(value)") {
+            value += 1
+          }
         }
       }
     }

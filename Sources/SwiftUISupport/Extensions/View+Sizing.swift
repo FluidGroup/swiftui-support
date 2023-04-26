@@ -14,11 +14,15 @@ private struct SizingPreferenceKey: PreferenceKey {
 }
 
 extension View {
+
+  public func measureSize(_ size: Binding<CGSize>) -> some View {
+    background(Color.clear._measureSize(size))
+  }
   
   /**
    Measures the receiver view size using GeometryReader.   
    */
-  public func measureSize(_ size: Binding<CGSize>) -> some View {
+  public func _measureSize(_ size: Binding<CGSize>) -> some View {
     
     self.background(
       GeometryReader(content: { proxy in

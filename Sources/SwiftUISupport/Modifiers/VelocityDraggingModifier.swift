@@ -11,10 +11,10 @@ public struct VelocityDraggingModifier: ViewModifier {
      For example, return CGSize.zero to put it back to the original position.
      */
     public var onEndDragging:
-      (_ velocity: CGVector, _ offset: CGSize, _ contentSize: CGSize) -> CGSize
+      (_ velocity: inout CGVector, _ offset: CGSize, _ contentSize: CGSize) -> CGSize
 
     public init(
-      onEndDragging: @escaping (_ velocity: CGVector, _ offset: CGSize, _ contentSize: CGSize)
+      onEndDragging: @escaping (_ velocity: inout CGVector, _ offset: CGSize, _ contentSize: CGSize)
         -> CGSize = { _, _, _ in .zero }
     ) {
       self.onEndDragging = onEndDragging
@@ -126,13 +126,15 @@ public struct VelocityDraggingModifier: ViewModifier {
         })
         .onEnded({ value in
 
+          var usingVelocity = self.velocity
+
           let targetOffset: CGSize = handler.onEndDragging(
-            self.velocity,
+            &usingVelocity,
             self.currentOffset,
             self.contentSize
           )
 
-          let velocity = self.velocity
+          let velocity = usingVelocity
 
           let distance = CGSize(
             width: targetOffset.width - currentOffset.width,

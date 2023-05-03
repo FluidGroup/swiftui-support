@@ -21,8 +21,9 @@ public struct VelocityDraggingModifier: ViewModifier {
     }
   }
 
-  public enum Action {
-    case onEndDragging(velocity: CGVector, offset: CGSize)
+  public enum GestureMode {
+    case normal
+    case highPriority
   }
 
   public enum SpringParameter {
@@ -74,118 +75,134 @@ public struct VelocityDraggingModifier: ViewModifier {
 
   public let axis: Axis.Set
   public let springParameter: SpringParameter
+  public let gestureMode: GestureMode
+  public let minimumDistance: Double
 
   private let horizontalBoundary: Boundary
   private let verticalBoundary: Boundary
   private let handler: Handler
 
+
   public init(
+    minimumDistance: Double = 0,
     axis: Axis.Set = [.horizontal, .vertical],
     horizontalBoundary: Boundary = .infinity,
     verticalBoundary: Boundary = .infinity,
     springParameter: SpringParameter = .hard,
+    gestureMode: GestureMode = .normal,
     handler: Handler = .init()
   ) {
     self.axis = axis
     self.springParameter = springParameter
     self.horizontalBoundary = horizontalBoundary
     self.verticalBoundary = verticalBoundary
+    self.gestureMode = gestureMode
     self.handler = handler
+    self.minimumDistance = minimumDistance
   }
 
   public func body(content: Content) -> some View {
-    content
+
+    let base = content
       .measureSize($contentSize)
       .animatableOffset(x: currentOffset.width, y: currentOffset.height)
-      .gesture(
-        DragGesture(
-          minimumDistance: 0,
-          coordinateSpace: .local
-        )
-        .onChanged({ value in
-          // TODO: stop the current animation when dragging restarted.
-          withAnimation(.interactiveSpring()) {
-            if axis.contains(.horizontal) {
-              currentOffset.width = RubberBandingModifier.rubberBand(
-                value: value.translation.width,
-                min: horizontalBoundary.min,
-                max: horizontalBoundary.max,
-                bandLength: horizontalBoundary.bandLength
-              )
-            }
-            if axis.contains(.vertical) {
-              currentOffset.height = RubberBandingModifier.rubberBand(
-                value: value.translation.height,
-                min: verticalBoundary.min,
-                max: verticalBoundary.max,
-                bandLength: verticalBoundary.bandLength
 
-              )
-            }
-          }
-        })
-        .onEnded({ value in
+    switch gestureMode {
+    case .normal:
+      base.gesture(gesture, including: .all)
+    case .highPriority:
+      base.highPriorityGesture(gesture, including: .all)
+    }
 
-          var usingVelocity = self.velocity
+  }
 
-          let targetOffset: CGSize = handler.onEndDragging(
-            &usingVelocity,
-            self.currentOffset,
-            self.contentSize
+  private var gesture: some Gesture {
+    DragGesture(
+      minimumDistance: minimumDistance,
+      coordinateSpace: .local
+    )
+    .onChanged({ value in
+      // TODO: stop the current animation when dragging restarted.
+      withAnimation(.interactiveSpring()) {
+        if axis.contains(.horizontal) {
+          currentOffset.width = RubberBandingModifier.rubberBand(
+            value: value.translation.width,
+            min: horizontalBoundary.min,
+            max: horizontalBoundary.max,
+            bandLength: horizontalBoundary.bandLength
           )
+        }
+        if axis.contains(.vertical) {
+          currentOffset.height = RubberBandingModifier.rubberBand(
+            value: value.translation.height,
+            min: verticalBoundary.min,
+            max: verticalBoundary.max,
+            bandLength: verticalBoundary.bandLength
 
-          let velocity = usingVelocity
-
-          let distance = CGSize(
-            width: targetOffset.width - currentOffset.width,
-            height: targetOffset.height - currentOffset.height
           )
+        }
+      }
+    })
+    .onEnded({ value in
 
-          let mappedVelocity = CGVector(
-            dx: velocity.dx / distance.width,
-            dy: velocity.dy / distance.height
-          )
+      var usingVelocity = self.velocity
 
-          var animationX: Animation {
-            switch springParameter {
-            case .interpolation(let mass, let stiffness, let damping):
-              return .interpolatingSpring(
-                mass: mass,
-                stiffness: stiffness,
-                damping: damping,
-                initialVelocity: mappedVelocity.dx
-              )
-            }
-          }
-
-          var animationY: Animation {
-            switch springParameter {
-            case .interpolation(let mass, let stiffness, let damping):
-              return .interpolatingSpring(
-                mass: mass,
-                stiffness: stiffness,
-                damping: damping,
-                initialVelocity: mappedVelocity.dy
-              )
-            }
-          }
-
-          withAnimation(
-            animationX
-          ) {
-            currentOffset.width = targetOffset.width
-          }
-
-          withAnimation(
-            animationY
-          ) {
-            currentOffset.height = targetOffset.height
-          }
-
-        })
-        .updatingVelocity($velocity)
-
+      let targetOffset: CGSize = handler.onEndDragging(
+        &usingVelocity,
+        self.currentOffset,
+        self.contentSize
       )
+
+      let velocity = usingVelocity
+
+      let distance = CGSize(
+        width: targetOffset.width - currentOffset.width,
+        height: targetOffset.height - currentOffset.height
+      )
+
+      let mappedVelocity = CGVector(
+        dx: velocity.dx / distance.width,
+        dy: velocity.dy / distance.height
+      )
+
+      var animationX: Animation {
+        switch springParameter {
+        case .interpolation(let mass, let stiffness, let damping):
+          return .interpolatingSpring(
+            mass: mass,
+            stiffness: stiffness,
+            damping: damping,
+            initialVelocity: mappedVelocity.dx
+          )
+        }
+      }
+
+      var animationY: Animation {
+        switch springParameter {
+        case .interpolation(let mass, let stiffness, let damping):
+          return .interpolatingSpring(
+            mass: mass,
+            stiffness: stiffness,
+            damping: damping,
+            initialVelocity: mappedVelocity.dy
+          )
+        }
+      }
+
+      withAnimation(
+        animationX
+      ) {
+        currentOffset.width = targetOffset.width
+      }
+
+      withAnimation(
+        animationY
+      ) {
+        currentOffset.height = targetOffset.height
+      }
+
+    })
+    .updatingVelocity($velocity)
   }
 
 }

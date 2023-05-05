@@ -13,10 +13,14 @@ public struct VelocityDraggingModifier: ViewModifier {
     public var onEndDragging:
       (_ velocity: inout CGVector, _ offset: CGSize, _ contentSize: CGSize) -> CGSize
 
+    public var onStartDragging: () -> Void
+
     public init(
+      onStartDragging: @escaping () -> Void = {},
       onEndDragging: @escaping (_ velocity: inout CGVector, _ offset: CGSize, _ contentSize: CGSize)
         -> CGSize = { _, _, _ in .zero }
     ) {
+      self.onStartDragging = onStartDragging
       self.onEndDragging = onEndDragging
     }
   }
@@ -70,6 +74,7 @@ public struct VelocityDraggingModifier: ViewModifier {
 
   /// pt/s
   @GestureVelocity private var velocity: CGVector
+  @GestureState private var isTracking = false
 
   @State private var contentSize: CGSize = .zero
 
@@ -107,11 +112,18 @@ public struct VelocityDraggingModifier: ViewModifier {
       .measureSize($contentSize)
       .animatableOffset(x: currentOffset.width, y: currentOffset.height)
 
-    switch gestureMode {
-    case .normal:
-      base.gesture(gesture, including: .all)
-    case .highPriority:
-      base.highPriorityGesture(gesture, including: .all)
+    Group {
+      switch gestureMode {
+      case .normal:
+        base.gesture(gesture, including: .all)
+      case .highPriority:
+        base.highPriorityGesture(gesture, including: .all)
+      }
+    }
+    .onChange(of: isTracking) { newValue in
+      if newValue {
+        handler.onStartDragging()
+      }
     }
 
   }
@@ -121,6 +133,9 @@ public struct VelocityDraggingModifier: ViewModifier {
       minimumDistance: minimumDistance,
       coordinateSpace: .local
     )
+    .updating($isTracking, body: { _, state, _ in
+      state = true
+    })
     .onChanged({ value in
       // TODO: stop the current animation when dragging restarted.
       withAnimation(.interactiveSpring()) {

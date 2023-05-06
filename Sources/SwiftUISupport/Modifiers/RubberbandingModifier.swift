@@ -1,4 +1,4 @@
-import GestureVelocity
+import SwiftUIGestureVelocity
 import SwiftUI
 
 /**

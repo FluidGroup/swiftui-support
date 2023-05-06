@@ -71,6 +71,7 @@ public struct VelocityDraggingModifier: ViewModifier {
    https://stackoverflow.com/questions/72880712/animate-gesturestate-on-reset
    */
   @State private var currentOffset: CGSize = .zero
+  @State private var targetOffset: CGSize = .zero
 
   /// pt/s
   @GestureVelocity private var velocity: CGVector
@@ -111,6 +112,13 @@ public struct VelocityDraggingModifier: ViewModifier {
     let base = content
       .measureSize($contentSize)
       .animatableOffset(x: currentOffset.width, y: currentOffset.height)
+      .onChange(of: isTracking) { newValue in
+        if isTracking == false, currentOffset != targetOffset {
+          // For recovery of gesture unexpectedly canceled by the other gesture.
+          // `onEnded` never get called in the case.
+          self.onEnded(velocity: .zero)
+        }
+      }
 
     Group {
       switch gestureMode {
@@ -153,71 +161,75 @@ public struct VelocityDraggingModifier: ViewModifier {
             min: verticalBoundary.min,
             max: verticalBoundary.max,
             bandLength: verticalBoundary.bandLength
-
           )
         }
       }
     })
-    .onEnded({ value in
-
-      var usingVelocity = self.velocity
-
-      let targetOffset: CGSize = handler.onEndDragging(
-        &usingVelocity,
-        self.currentOffset,
-        self.contentSize
-      )
-
-      let velocity = usingVelocity
-
-      let distance = CGSize(
-        width: targetOffset.width - currentOffset.width,
-        height: targetOffset.height - currentOffset.height
-      )
-
-      let mappedVelocity = CGVector(
-        dx: velocity.dx / distance.width,
-        dy: velocity.dy / distance.height
-      )
-
-      var animationX: Animation {
-        switch springParameter {
-        case .interpolation(let mass, let stiffness, let damping):
-          return .interpolatingSpring(
-            mass: mass,
-            stiffness: stiffness,
-            damping: damping,
-            initialVelocity: mappedVelocity.dx
-          )
-        }
-      }
-
-      var animationY: Animation {
-        switch springParameter {
-        case .interpolation(let mass, let stiffness, let damping):
-          return .interpolatingSpring(
-            mass: mass,
-            stiffness: stiffness,
-            damping: damping,
-            initialVelocity: mappedVelocity.dy
-          )
-        }
-      }
-
-      withAnimation(
-        animationX
-      ) {
-        currentOffset.width = targetOffset.width
-      }
-
-      withAnimation(
-        animationY
-      ) {
-        currentOffset.height = targetOffset.height
-      }
-
+    .onEnded({ _ in
+      self.onEnded(velocity: velocity)
     })
     .updatingVelocity($velocity)
+  }
+
+  private func onEnded(velocity: CGVector) {
+    var usingVelocity = velocity
+
+    let targetOffset: CGSize = handler.onEndDragging(
+      &usingVelocity,
+      self.currentOffset,
+      self.contentSize
+    )
+
+    self.targetOffset = targetOffset
+
+    let velocity = usingVelocity
+
+    let distance = CGSize(
+      width: targetOffset.width - currentOffset.width,
+      height: targetOffset.height - currentOffset.height
+    )
+
+    let mappedVelocity = CGVector(
+      dx: velocity.dx / distance.width,
+      dy: velocity.dy / distance.height
+    )
+
+    var animationX: Animation {
+      switch springParameter {
+      case .interpolation(let mass, let stiffness, let damping):
+        return .interpolatingSpring(
+          mass: mass,
+          stiffness: stiffness,
+          damping: damping,
+          initialVelocity: mappedVelocity.dx
+        )
+      }
+    }
+
+    var animationY: Animation {
+      switch springParameter {
+      case .interpolation(let mass, let stiffness, let damping):
+        return .interpolatingSpring(
+          mass: mass,
+          stiffness: stiffness,
+          damping: damping,
+          initialVelocity: mappedVelocity.dy
+        )
+      }
+    }
+
+    withAnimation(
+      animationX
+    ) {
+      currentOffset.width = targetOffset.width
+    }
+
+    withAnimation(
+      animationY
+    ) {
+      currentOffset.height = targetOffset.height
+    }
+
   }
 
 }

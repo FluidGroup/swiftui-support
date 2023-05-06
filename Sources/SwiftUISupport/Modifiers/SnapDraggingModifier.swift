@@ -1,7 +1,28 @@
 import GestureVelocity
 import SwiftUI
 
-public struct VelocityDraggingModifier: ViewModifier {
+@available(*, deprecated, renamed: "SnapDraggingModifier")
+public typealias VelocityDraggingModifier = SnapDraggingModifier
+
+public struct SnapDraggingModifier: ViewModifier {
+
+  public struct Activation {
+
+    public enum Region {
+      /// entire view
+      case screen
+      ///
+      case edgeLeading
+    }
+
+    public let minimumDistance: Double
+    public let regionToActivate: Region
+
+    public init(minimumDistance: Double = 0, regionToActivate: Region = .screen) {
+      self.minimumDistance = minimumDistance
+      self.regionToActivate = regionToActivate
+    }
+  }
 
   public struct Handler {
     /**
@@ -77,20 +98,22 @@ public struct VelocityDraggingModifier: ViewModifier {
   @GestureVelocity private var velocity: CGVector
   @GestureState private var isTracking = false
 
+  @State private var isActive = false
   @State private var contentSize: CGSize = .zero
+
+  @Environment(\.layoutDirection) var layoutDirection
 
   public let axis: Axis.Set
   public let springParameter: SpringParameter
   public let gestureMode: GestureMode
-  public let minimumDistance: Double
+  public let activation: Activation
 
   private let horizontalBoundary: Boundary
   private let verticalBoundary: Boundary
   private let handler: Handler
 
-
   public init(
-    minimumDistance: Double = 0,
+    activation: Activation = .init(),
     axis: Axis.Set = [.horizontal, .vertical],
     horizontalBoundary: Boundary = .infinity,
     verticalBoundary: Boundary = .infinity,
@@ -104,7 +127,7 @@ public struct VelocityDraggingModifier: ViewModifier {
     self.verticalBoundary = verticalBoundary
     self.gestureMode = gestureMode
     self.handler = handler
-    self.minimumDistance = minimumDistance
+    self.activation = activation
   }
 
   public func body(content: Content) -> some View {
@@ -136,37 +159,72 @@ public struct VelocityDraggingModifier: ViewModifier {
 
   }
 
+  private func isInActivation(startLocation: CGPoint) -> Bool {
+
+    switch activation.regionToActivate {
+    case .screen:
+      return true
+    case .edgeLeading:
+      switch layoutDirection {
+      case .leftToRight:
+        return CGRect(origin: .zero, size: .init(width: 20, height: CGFloat.greatestFiniteMagnitude)).contains(startLocation)
+      case .rightToLeft:
+        // FIXME: Unimplemented
+        return CGRect(origin: .zero, size: .init(width: 20, height: CGFloat.greatestFiniteMagnitude)).contains(startLocation)
+      @unknown default:
+        return false
+      }
+    }
+
+  }
+
   private var gesture: some Gesture {
     DragGesture(
-      minimumDistance: minimumDistance,
+      minimumDistance: activation.minimumDistance,
       coordinateSpace: .local
     )
     .updating($isTracking, body: { _, state, _ in
       state = true
     })
     .onChanged({ value in
+
+      if self.isActive || isInActivation(startLocation: value.startLocation) {
+
+        self.isActive = true
+
+        // TODO: including minimumDistance
+        let resolvedTranslation = value.translation
+
       // TODO: stop the current animation when dragging restarted.
-      withAnimation(.interactiveSpring()) {
-        if axis.contains(.horizontal) {
-          currentOffset.width = RubberBandingModifier.rubberBand(
-            value: value.translation.width,
-            min: horizontalBoundary.min,
-            max: horizontalBoundary.max,
-            bandLength: horizontalBoundary.bandLength
-          )
-        }
-        if axis.contains(.vertical) {
-          currentOffset.height = RubberBandingModifier.rubberBand(
-            value: value.translation.height,
-            min: verticalBoundary.min,
-            max: verticalBoundary.max,
-            bandLength: verticalBoundary.bandLength
-          )
+        withAnimation(.interactiveSpring()) {
+          if axis.contains(.horizontal) {
+            currentOffset.width = RubberBandingModifier.rubberBand(
+              value: resolvedTranslation.width,
+              min: horizontalBoundary.min,
+              max: horizontalBoundary.max,
+              bandLength: horizontalBoundary.bandLength
+            )
+          }
+          if axis.contains(.vertical) {
+            currentOffset.height = RubberBandingModifier.rubberBand(
+              value: resolvedTranslation.height,
+              min: verticalBoundary.min,
+              max: verticalBoundary.max,
+              bandLength: verticalBoundary.bandLength
+            )
+          }
         }
       }
     })
     .onEnded({ _ in
-      self.onEnded(velocity: velocity)
+
+      if isActive {
+        self.onEnded(velocity: velocity)
+      } else {
+        assert(currentOffset == targetOffset)
+      }
+
+      self.isActive = false
     })
     .updatingVelocity($velocity)
   }
@@ -245,7 +303,7 @@ struct VelocityDraggingModifier_Previews: PreviewProvider {
       RoundedRectangle(cornerRadius: 16, style: .circular)
         .frame(width: 120, height: 50)
         .modifier(
-          VelocityDraggingModifier(
+          SnapDraggingModifier(
             axis: [.vertical],
             verticalBoundary: .init(min: -10, max: 10, bandLength: 50)
           )

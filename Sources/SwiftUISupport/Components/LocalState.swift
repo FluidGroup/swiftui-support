@@ -1,26 +1,52 @@
-
 import SwiftUI
-
-/**
+/*
  A stateful view in a closure or function-based component instead of a struct-based view.
  The stateful view allows for building content with state, and holds the state of the component.
+
+ ```swift
+  struct ComponentState: Equatable {
+    var a = "1"
+    var b = "2"
+    var c = "3"
+  }
+
+  var body: some View {
+    VStack {
+      LocalState(
+        initial: ComponentState(),
+        onChange: { print($0) }
+      ) { state in
+        TextField("A", text: state.a)
+        TextField("B", text: state.b)
+        TextField("C", text: state.c)
+      }
+    }
+  }
+ ```
  */
-public struct LocalState<State, Content: View>: View {
+public struct LocalState<State: Equatable, Content: View>: View {
 
   @SwiftUI.State var state: State
 
   private let content: (Binding<State>) -> Content
 
+  private let onChange: (State) -> Void
+
   public init(
     initial: State,
+    onChange: @escaping (State) -> Void = { _ in },
     @ViewBuilder content: @escaping (Binding<State>) -> Content
   ) {
+    self.onChange = onChange
     self._state = .init(initialValue: initial)
     self.content = content
   }
 
   public var body: some View {
     content($state)
+      .onChange(of: state) { newValue in
+        onChange(newValue)
+      }
   }
 
 }
@@ -34,6 +60,8 @@ struct BookState: View, PreviewProvider {
 
   static var previews: some View {
     Self()
+    Content3()
+      .previewDisplayName("Binding")
   }
 
   private struct Content: View {
@@ -90,6 +118,28 @@ struct BookState: View, PreviewProvider {
     }
   }
 
+  private struct Content3: View {
+
+    struct ComponentState: Equatable {
+      var a = "1"
+      var b = "2"
+      var c = "3"
+    }
+
+    var body: some View {
+      VStack {
+        LocalState(
+          initial: ComponentState(),
+          onChange: { print($0) }
+        ) { state in
+          TextField("A", text: state.a)
+          TextField("B", text: state.b)
+          TextField("C", text: state.c)
+        }
+      }
+    }
+
+  }
 
 }
 

@@ -88,3 +88,17 @@ private struct TransactionModifiedContent<Value: Equatable>: ViewModifier {
   
 }
 
+#if canImport(UIKit)
+
+import UIKit
+
+extension View {
+
+  public func font(_ uiFont: UIFont, lineHeight: CGFloat) -> some View {
+    self.font(.init(uiFont))
+      .lineSpacing(lineHeight - uiFont.lineHeight)
+      .padding(.vertical, (lineHeight - uiFont.lineHeight) / 2)
+  }
+}
+
+#endif

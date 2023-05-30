@@ -94,10 +94,11 @@ import UIKit
 
 extension View {
 
-  public func font(_ uiFont: UIFont, lineHeight: CGFloat) -> some View {
+  /// Allows setting lineSpacing derived from lineHeight values for multiline text
+  public func font(_ uiFont: UIFont, lineSpacing: CGFloat) -> some View {
+    // https://stackoverflow.com/a/64652348
     self.font(.init(uiFont))
-      .lineSpacing(lineHeight - uiFont.lineHeight)
-      .padding(.vertical, (lineHeight - uiFont.lineHeight) / 2)
+      .lineSpacing(lineSpacing - uiFont.lineHeight)
   }
 }
 

@@ -88,3 +88,18 @@ private struct TransactionModifiedContent<Value: Equatable>: ViewModifier {
   
 }
 
+#if canImport(UIKit)
+
+import UIKit
+
+extension View {
+
+  /// Allows setting lineSpacing derived from lineHeight values for multiline text
+  public func font(_ uiFont: UIFont, lineSpacing: CGFloat) -> some View {
+    // https://stackoverflow.com/a/64652348
+    self.font(.init(uiFont))
+      .lineSpacing(lineSpacing - uiFont.lineHeight)
+  }
+}
+
+#endif

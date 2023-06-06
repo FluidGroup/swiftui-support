@@ -1,16 +1,14 @@
 import SwiftUI
 
-private struct SizingPreferenceKey: PreferenceKey {
+private struct SizeStackingPreferenceKey: PreferenceKey {
   
-  typealias Value = CGSize
+  typealias Value = [String : CGSize]
   
-  static var defaultValue: Value = .zero
+  static var defaultValue: Value = [:]
   
   static func reduce(value: inout Value, nextValue: () -> Value) {
-    let next = nextValue()
-    value = next
+    value.merge(nextValue(), uniquingKeysWith: { _, dic in dic })
   }
-  
 }
 
 extension View {
@@ -18,23 +16,23 @@ extension View {
   /**
    Measures the receiver view size using GeometryReader.
    */
-  public func measureSize(_ size: Binding<CGSize>) -> some View {
-    background(Color.clear._measureSize(size))
+  public func measureSize(_ size: Binding<CGSize>, _ line: Int = #line, _ file: String = #file) -> some View {
+    background(Color.clear._measureSize(key: "\(file)_\(line)", size: size))
   }
 
-  private func _measureSize(_ size: Binding<CGSize>) -> some View {
+  private func _measureSize(key: String, size: Binding<CGSize>) -> some View {
     
     self.background(
       GeometryReader(content: { proxy in
         Color.clear
-          .preference(key: SizingPreferenceKey.self, value: proxy.size)
+          .preference(key: SizeStackingPreferenceKey.self, value: [key : proxy.size])
       })
     )
-    .onPreferenceChange(SizingPreferenceKey.self) { _size in
-      size.wrappedValue = _size
+    .onPreferenceChange(SizeStackingPreferenceKey.self) { _size in
+      guard let value = _size[key] else { return }
+      size.wrappedValue = value
     }
     
   }
   
 }
-

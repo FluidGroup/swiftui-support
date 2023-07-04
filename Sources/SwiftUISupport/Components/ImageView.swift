@@ -47,6 +47,8 @@ public struct ImageView: View {
 
     func makeUIView(context: Context) -> UIImageView {
       let imageView = UIImageView()
+      imageView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+      imageView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
       imageView.clipsToBounds = true
       return imageView
     }

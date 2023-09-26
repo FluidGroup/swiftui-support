@@ -19,15 +19,11 @@ let package = Package(
     )
   ],
   dependencies: [
-    // Dependencies declare other packages that this package depends on.
-    // .package(url: /* package url */, from: "1.0.0"),
-    .package(url: "https://github.com/FluidGroup/swiftui-gesture-velocity", from: "1.0.0")
   ],
   targets: [
     .target(
       name: "SwiftUISupport",
       dependencies: [
-        .product(name: "SwiftUIGestureVelocity", package: "swiftui-gesture-velocity"),
       ]
     ),
     .testTarget(

@@ -1,4 +1,3 @@
-import SwiftUIGestureVelocity
 import SwiftUI
 
 /**
@@ -47,8 +46,6 @@ public struct RubberBandingModifier: ViewModifier {
    */
   @State private var position: CGSize = .zero
 
-  @GestureVelocity private var velocity: CGVector
-
   private var handler: @MainActor (Bool) -> Void
   private let bandLength: CGFloat
 
@@ -89,7 +86,7 @@ public struct RubberBandingModifier: ViewModifier {
         })
         .onEnded({ value in
 
-          let velocity = self.velocity
+          let velocity = CGVector(dx: value.velocity.width, dy: value.velocity.height)
 
           let distance = CGSize(
             width: -position.width,
@@ -113,7 +110,6 @@ public struct RubberBandingModifier: ViewModifier {
           }
 
         })
-        .updatingVelocity($velocity)
 
       )
       .preference(key: RubberBandingIsSlidingPreferenceKey.self, value: position != .zero)

@@ -1,6 +1,6 @@
 import SwiftUI
 
-extension Text {
+extension View {
 
   /**
    [Extension]
@@ -8,6 +8,7 @@ extension Text {
   public func foregroundLinearGradient(_ gradient: LinearGradient) -> some View {
 
     self
+      .hidden()
       .overlay(
         gradient
           .aspectRatio(nil, contentMode: .fill)

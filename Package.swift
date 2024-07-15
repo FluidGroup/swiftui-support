@@ -12,11 +12,11 @@ let package = Package(
     .tvOS(.v13),
   ],
   products: [
-    // Products define the executables and libraries a package produces, and make them visible to other packages.
     .library(
       name: "SwiftUISupport",
       targets: ["SwiftUISupport"]
-    )
+    ),
+    .library(name: "SwiftUISupportSizing", targets: ["SwiftUISupportSizing"])
   ],
   dependencies: [
   ],
@@ -26,6 +26,7 @@ let package = Package(
       dependencies: [
       ]
     ),
+    .target(name: "SwiftUISupportSizing"),
     .testTarget(
       name: "SwiftUISupportTests",
       dependencies: ["SwiftUISupport"]

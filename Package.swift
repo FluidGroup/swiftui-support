@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
   name: "SwiftUISupport",
   platforms: [
-    .iOS(.v14),
+    .iOS(.v15),
     .macOS(.v10_15),
     .watchOS(.v6),
     .tvOS(.v13),
@@ -17,6 +17,9 @@ let package = Package(
       targets: ["SwiftUISupport"]
     ),
     .library(name: "SwiftUISupportSizing", targets: ["SwiftUISupportSizing"]),
+    .library(name: "SwiftUISupportLayout", targets: ["SwiftUISupportLayout"]),
+    .library(name: "SwiftUISupportBackport", targets: ["SwiftUISupportBackport"]),
+    .library(name: "SwiftUISupportDescribing", targets: ["SwiftUISupportDescribing"]),
     .library(name: "SwiftUISupportGeometryEffect", targets: ["SwiftUISupportGeometryEffect"])
   ],
   dependencies: [
@@ -29,7 +32,10 @@ let package = Package(
         "SwiftUISupportGeometryEffect"
       ]
     ),
+    .target(name: "SwiftUISupportDescribing"),
+    .target(name: "SwiftUISupportBackport"),
     .target(name: "SwiftUISupportSizing"),
+    .target(name: "SwiftUISupportLayout"),
     .target(name: "SwiftUISupportGeometryEffect"),
     .testTarget(
       name: "SwiftUISupportTests",

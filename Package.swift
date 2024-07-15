@@ -16,7 +16,8 @@ let package = Package(
       name: "SwiftUISupport",
       targets: ["SwiftUISupport"]
     ),
-    .library(name: "SwiftUISupportSizing", targets: ["SwiftUISupportSizing"])
+    .library(name: "SwiftUISupportSizing", targets: ["SwiftUISupportSizing"]),
+    .library(name: "SwiftUISupportGeometryEffect", targets: ["SwiftUISupportGeometryEffect"])
   ],
   dependencies: [
   ],
@@ -24,9 +25,12 @@ let package = Package(
     .target(
       name: "SwiftUISupport",
       dependencies: [
+        "SwiftUISupportSizing",
+        "SwiftUISupportGeometryEffect"
       ]
     ),
     .target(name: "SwiftUISupportSizing"),
+    .target(name: "SwiftUISupportGeometryEffect"),
     .testTarget(
       name: "SwiftUISupportTests",
       dependencies: ["SwiftUISupport"]

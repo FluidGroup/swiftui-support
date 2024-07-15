@@ -1,5 +1,6 @@
 
 import SwiftUI
+import SwiftUISupportGeometryEffect
 
 public struct StyleModifier: ViewModifier {
   

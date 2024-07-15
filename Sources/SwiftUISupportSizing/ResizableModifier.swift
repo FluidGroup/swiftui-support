@@ -62,7 +62,6 @@ public struct ResizableModifier: ViewModifier {
 }
 
 #if DEBUG
-
 struct BookScalingFrame: View, PreviewProvider {
   var body: some View {
     Content()

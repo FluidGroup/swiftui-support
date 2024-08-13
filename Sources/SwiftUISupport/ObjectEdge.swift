@@ -4,11 +4,11 @@ import SwiftUI
  https://forums.developer.apple.com/forums/thread/739163
  */
 @propertyWrapper
-struct ObjectEdge<O>: DynamicProperty {
+public struct ObjectEdge<O>: DynamicProperty {
 
   @State private var box: Box<O> = .init()
 
-  var wrappedValue: O {
+  public var wrappedValue: O {
     if let value = box.value {
       return value
     } else {
@@ -19,7 +19,7 @@ struct ObjectEdge<O>: DynamicProperty {
 
   private let factory: () -> O
 
-  init(wrappedValue factory: @escaping @autoclosure () -> O) {
+  public init(wrappedValue factory: @escaping @autoclosure () -> O) {
     self.factory = factory
   }
 

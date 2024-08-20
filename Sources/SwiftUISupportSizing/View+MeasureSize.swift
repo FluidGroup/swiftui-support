@@ -1,20 +1,20 @@
 import SwiftUI
 
 private struct SizingPreferenceKey: PreferenceKey {
-
+  
   typealias Value = CGSize
-
+  
   static var defaultValue: Value = .zero
-
+  
   static func reduce(value: inout Value, nextValue: () -> Value) {
     let next = nextValue()
     value = next
   }
-
+  
 }
 
 extension View {
-
+  
   /**
    Measures the receiver view size using GeometryReader.
    
@@ -27,16 +27,16 @@ extension View {
 }
 
 private enum GeometryReaderPreferenceKey<Projected: Equatable>: PreferenceKey {
-
+  
   static var defaultValue: Projected? {
     return nil
   }
-
+  
   static func reduce(value: inout Value, nextValue: () -> Projected?) {
     let next = nextValue()
     value = next
   }
-
+  
 }
 
 extension View {
@@ -55,17 +55,19 @@ extension View {
     onChange: @escaping (Projected) -> Void
   ) -> some View {
     background(
-      Color.clear.background(
-        GeometryReader(content: { proxy in
-          Color.clear
-            .preference(key: GeometryReaderPreferenceKey<Projected>.self, value: transform(proxy))
-        })
-      )
-      .onPreferenceChange(GeometryReaderPreferenceKey<Projected>.self) { projected in
-        guard let projected else { return }
-        onChange(projected)
-      }
+      Rectangle()
+        .hidden()
+        .background(
+          GeometryReader(content: { proxy in
+            Color.clear
+              .preference(key: GeometryReaderPreferenceKey<Projected>.self, value: transform(proxy))
+          })
+        )
+        .onPreferenceChange(GeometryReaderPreferenceKey<Projected>.self) { projected in
+          guard let projected else { return }
+          onChange(projected)
+        }
     )
   }
-
+  
 }

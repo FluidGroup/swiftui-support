@@ -8,22 +8,22 @@ on:
 
 jobs:
   build:
-    runs-on: macos-13
+    runs-on: macos-14
 
     steps:
       - uses: maxim-lobanov/setup-xcode@v1.1
         with:
-          xcode-version: "15.0"
+          xcode-version: "16.0"
       - uses: actions/checkout@v2
       - name: xcodebuild
         run: xcodebuild -scheme SwiftUISupport -sdk iphoneos -destination 'generic/platform=iOS'
   test:
-    runs-on: macos-13
+    runs-on: macos-14
 
     steps:
       - uses: maxim-lobanov/setup-xcode@v1.1
         with:
-          xcode-version: "15.0"
+          xcode-version: "16.0"
       - uses: actions/checkout@v2
         with:
           submodules: true

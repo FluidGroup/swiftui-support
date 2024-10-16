@@ -1,5 +1,8 @@
 import SwiftUI
 
+#if DEBUG
+// still in development
+
 #Preview("Using Aligment guide") {
 
   Rectangle()
@@ -13,7 +16,7 @@ import SwiftUI
 
 extension View {
 
-  public func anchoring(@ViewBuilder content: () -> some View) -> some View {
+  internal func anchoring(@ViewBuilder content: () -> some View) -> some View {
     overlay(alignment: .topTrailing) {
       content()
         .alignmentGuide(.top) { d in
@@ -26,3 +29,5 @@ extension View {
   }
 
 }
+
+#endif

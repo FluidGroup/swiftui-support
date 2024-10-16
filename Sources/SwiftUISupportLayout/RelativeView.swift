@@ -1,57 +1,20 @@
 import SwiftUI
 
-/// like align-self
-public struct RelativeLayoutModifier: ViewModifier {
+/// deprecated
+public struct RelativeLayoutModifier {
 
   public enum HorizontalPosition {
     case leading
+    @available(*, unavailable)
     case center
     case trailing
   }
 
   public enum VerticalPosition {
     case top
+    @available(*, unavailable)
     case center
     case bottom
-  }
-
-  public let vertical: VerticalPosition
-  public let horizontal: HorizontalPosition
-
-  public init(
-    vertical: VerticalPosition,
-    horizontal: HorizontalPosition
-  ) {
-    self.vertical = vertical
-    self.horizontal = horizontal
-  }
-
-  public func body(content: Content) -> some View {
-    let horizontalContent: some View = HStack {
-      switch horizontal {
-      case .leading:
-        content
-        Spacer(minLength: 0)
-      case .center:
-        content
-      case .trailing:
-        Spacer(minLength: 0)
-        content
-      }
-    }
-
-    VStack {
-      switch vertical {
-      case .top:
-        horizontalContent
-        Spacer(minLength: 0)
-      case .center:
-        horizontalContent
-      case .bottom:
-        Spacer(minLength: 0)
-        horizontalContent
-      }
-    }
   }
 
 }
@@ -62,58 +25,119 @@ extension View {
    * Lays out the view and positions it within the layout bounds according to vertical and horizontal positional specifiers.
    *  Can position the child at any of the 4 corners, or the middle of any of the 4 edges, as well as the center - similar to "9-part" image areas.
    */
+  @available(*, deprecated, message: "use relative(alignment: )")
   public func relative(
-    vertical: RelativeLayoutModifier.VerticalPosition = .center,
-    horizontal: RelativeLayoutModifier.HorizontalPosition = .center
+    vertical: RelativeLayoutModifier.VerticalPosition,
+    horizontal: RelativeLayoutModifier.HorizontalPosition
   ) -> some View {
-    self.modifier(RelativeLayoutModifier(vertical: vertical, horizontal: horizontal))
+            
+    return self.relative(alignment: .init(
+      horizontal: {
+        switch horizontal {
+        case .center:
+          return .center
+        case .leading:
+          return .leading
+        case .trailing:
+          return .trailing
+        }
+      }(),
+      vertical: {
+        switch vertical {
+        case .center:
+          return .center
+        case .top:
+          return .top
+        case .bottom:
+          return .bottom
+        }        
+      }()
+    )
+    )    
   }
-
+  
+  @available(*, deprecated, message: "use relative(alignment: )")
+  public func relative(
+    horizontal: RelativeLayoutModifier.HorizontalPosition
+  ) -> some View {
+    
+    return self.relative(horizontalAlignment: {
+      switch horizontal {
+      case .center:
+        return .center
+      case .leading:
+        return .leading
+      case .trailing:
+        return .trailing
+      }
+    }()
+    )    
+  }
+  
+  @available(*, deprecated, message: "use relative(alignment: )")
+  public func relative(
+    vertical: RelativeLayoutModifier.VerticalPosition
+  ) -> some View {
+    
+    return self.relative(verticalAlignment: {
+      switch vertical {
+      case .center:
+        return .center
+      case .top:
+        return .top
+      case .bottom:
+        return .bottom
+      }        
+    }()                         
+    )    
+  }
+  
+  public func relative(
+    alignment: Alignment
+  ) -> some View {           
+    self.frame(
+      maxWidth: .infinity,
+      maxHeight: .infinity,
+      alignment: alignment
+    )
+  }
+  
+  public func relative(
+    horizontalAlignment: HorizontalAlignment
+  ) -> some View {           
+    self.frame(maxWidth: .infinity, alignment: .init(horizontal: horizontalAlignment, vertical: .center))
+  }
+  
+  public func relative(
+    verticalAlignment: VerticalAlignment
+  ) -> some View {    
+    self.frame(maxHeight: .infinity, alignment: .init(horizontal: .center, vertical: verticalAlignment))
+  }
+  
+  public func relative(
+    horizontalAlignment: HorizontalAlignment,
+    verticalAlignment: VerticalAlignment
+  ) -> some View {    
+    self.frame(
+      maxWidth: .infinity,
+      maxHeight: .infinity,
+      alignment: .init(horizontal: horizontalAlignment, vertical: verticalAlignment)
+    )
+  }
+  
 }
 
 #Preview {
-  Rectangle()
-    .frame(width: 50, height: 50)
-    .overlay(
-      Circle()
-        .foregroundColor(.red)
-        .frame(width: 20, height: 20)
-        .relative(vertical: .top, horizontal: .trailing)
-        .offset(x: 10, y: -10)
-    )
-  
-  Rectangle()
-    .frame(width: 50, height: 50)
-    .overlay(
-      Circle()
-        .foregroundColor(.red)
-        .frame(width: 20, height: 20)
-        .relative(vertical: .top, horizontal: .trailing)
-        .offset(x: 10, y: -10)
-    )
-  
-  HStack {
-    Text("A")
-    Text("B")
-    Text("C")
-  }
-  .environment(\.layoutDirection, .rightToLeft)
-}
+  HStack(alignment: .top) {
+    
+    Rectangle()
+      .frame(width: 100, height: 100)
+    
+    Rectangle()
+      .frame(width: 50, height: 50)
+      .foregroundColor(.red)
+      .relative(verticalAlignment: .center)
 
-#Preview("Using Aligment guide") {
-  
-  Rectangle()
-    .frame(width: 50, height: 50)
-    .overlay(alignment: .topTrailing) {
-      Circle()
-        .fill(.blue)
-        .frame(width: 20, height: 20)
-        .alignmentGuide(.top) { d in
-          return d[.top] + d.height / 2
-        }
-        .alignmentGuide(.trailing) { d in
-          return d[.trailing] - d.width / 2
-        }
-    }
-    .background(Color.purple)
+  }    
+  .background(Color.green)
 }

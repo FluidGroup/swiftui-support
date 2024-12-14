@@ -54,23 +54,23 @@ public struct YTranslationEffect: GeometryEffect {
 extension View {
 
   /// Applies offset effect that is animatable against ``SwiftUI/View/offset``
-  public func animatableOffset(x: CGFloat) -> some View {
+  public nonisolated func animatableOffset(x: CGFloat) -> some View {
     self.modifier(XTranslationEffect(offset: x))
   }
 
   /// Applies offset effect that is animatable against ``SwiftUI/View/offset``
-  public func animatableOffset(y: CGFloat) -> some View {
+  public nonisolated func animatableOffset(y: CGFloat) -> some View {
     self.modifier(YTranslationEffect(offset: y))
   }
 
   /// Applies offset effect that is animatable against ``SwiftUI/View/offset``
-  public func animatableOffset(x: CGFloat, y: CGFloat) -> some View {
+  public nonisolated func animatableOffset(x: CGFloat, y: CGFloat) -> some View {
     // could not this done with CGSize and AnimatablePair.
     self.animatableOffset(x: x).animatableOffset(y: y)
   }
 
   /// Applies offset effect that is animatable against ``SwiftUI/View/offset``
-  public func animatableOffset(_ offset: CGSize) -> some View {
+  public nonisolated func animatableOffset(_ offset: CGSize) -> some View {
     self.animatableOffset(x: offset.width).animatableOffset(y: offset.height)
   }
 }

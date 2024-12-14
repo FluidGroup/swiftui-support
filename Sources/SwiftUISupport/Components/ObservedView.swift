@@ -38,7 +38,7 @@ public struct AsyncObservedView<Object: ObservableObject, Content: View>: View {
   @State var loaded: Object?
 
   private let content: (Object) -> Content
-  private let objectLoader: () async -> Object
+  private let objectLoader: @Sendable () async -> Object
 
   public init(
     objectLoader: @escaping @Sendable () async -> Object,

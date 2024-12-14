@@ -10,7 +10,7 @@ public struct StyleModifier: ViewModifier {
   public let blurRadius: Double
   public let rotationEffect: Angle
 
-  public init(
+  public nonisolated init(
     opacity: Double = 1,
     scale: CGSize = .init(width: 1, height: 1),
     offset: CGSize = .zero,

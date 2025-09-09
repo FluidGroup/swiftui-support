@@ -14,7 +14,6 @@ import SwiftUI
     VStack {
       LocalState(
         initial: ComponentState(),
-        onChange: { print($0) }
       ) { state in
         TextField("A", text: state.a)
         TextField("B", text: state.b)
@@ -24,29 +23,22 @@ import SwiftUI
   }
  ```
  */
-public struct LocalState<State: Equatable, Content: View>: View {
+public struct LocalState<State, Content: View>: View {
 
   @SwiftUI.State var state: State
 
   private let content: (Binding<State>) -> Content
 
-  private let onChange: (State) -> Void
-
   public init(
     initial: State,
-    onChange: @escaping (State) -> Void = { _ in },
     @ViewBuilder content: @escaping (Binding<State>) -> Content
   ) {
-    self.onChange = onChange
     self._state = .init(initialValue: initial)
     self.content = content
   }
 
   public var body: some View {
     content($state)
-      .onChange(of: state) { newValue in
-        onChange(newValue)
-      }
   }
 
 }
@@ -129,8 +121,7 @@ struct BookState: View, PreviewProvider {
     var body: some View {
       VStack {
         LocalState(
-          initial: ComponentState(),
-          onChange: { print($0) }
+          initial: ComponentState()
         ) { state in
           TextField("A", text: state.a)
           TextField("B", text: state.b)

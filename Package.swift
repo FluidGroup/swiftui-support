@@ -6,8 +6,8 @@ import PackageDescription
 let package = Package(
   name: "SwiftUISupport",
   platforms: [
-    .iOS(.v16),
-    .macOS(.v10_15),
+    .iOS(.v17),
+    .macOS(.v12),
     .watchOS(.v6),
     .tvOS(.v13),
   ],

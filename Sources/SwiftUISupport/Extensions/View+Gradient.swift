@@ -5,7 +5,7 @@ extension View {
   /**
    [Extension]
    */
-  public func foregroundLinearGradient(_ gradient: LinearGradient) -> some View {
+  public func foregroundMaskStyle<Style: ShapeStyle & View>(_ gradient: Style) -> some View {
 
     self
       .hidden()

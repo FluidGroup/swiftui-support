@@ -27,8 +27,8 @@ struct BookChange: View, PreviewProvider {
           .onChangeWithPrevious(of: count, emitsInitial: true) { newValue, oldValue in
             print("\(newValue), \(oldValue)")
           }
-          .foregroundLinearGradient(
-            .linearGradient(
+          .foregroundMaskStyle(
+            LinearGradient(
               colors: [.orange, .blue],
               startPoint: .bottom,
               endPoint: .bottomTrailing
